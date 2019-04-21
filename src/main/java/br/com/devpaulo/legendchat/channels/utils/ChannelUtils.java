@@ -22,7 +22,7 @@ import br.com.devpaulo.legendchat.channels.types.Channel;
 import br.com.devpaulo.legendchat.channels.types.TemporaryChannel;
 import br.com.devpaulo.legendchat.listeners.Listeners;
 import br.com.devpaulo.legendchat.listeners.Listeners_old;
-import org.bukkit.configuration.file.YamlConfiguration;
+import me.clip.placeholderapi.PlaceholderAPI;
 
 @SuppressWarnings("deprecation")
 public class ChannelUtils {
@@ -298,6 +298,11 @@ public class ChannelUtils {
 		for (String n : e.getTags()) {
 			completa = completa.replace("{" + n + "}", ChatColor.translateAlternateColorCodes('&', e.getTagValue(n)));
 		}
+		if(Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+			completa = PlaceholderAPI.setBracketPlaceholders(sender, completa);
+		}
+		for(String n : e.getTags())
+			completa = completa.replace("{"+n+"}", ChatColor.translateAlternateColorCodes('&', e.getTagValue(n)));
 		completa = completa.replace("{msg}", translateAlternateChatColorsWithPermission(sender, message));
 
 		for (Player p : e.getRecipients()) {

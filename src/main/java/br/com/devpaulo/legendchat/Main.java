@@ -28,7 +28,6 @@ import br.com.devpaulo.legendchat.updater.Updater;
 import com.earth2me.essentials.Essentials;
 import java.util.Map;
 import java.util.logging.Level;
-import org.bukkit.Bukkit;
 
 public class Main extends JavaPlugin implements PluginMessageListener {
 

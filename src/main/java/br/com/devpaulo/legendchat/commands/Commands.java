@@ -5,7 +5,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import br.com.devpaulo.legendchat.Main;
 import br.com.devpaulo.legendchat.api.Legendchat;
 import com.earth2me.essentials.User;
@@ -43,6 +42,7 @@ public class Commands implements CommandExecutor, TabCompleter {
 				command.setTabCompleter(cmd);
 			}
 			break;
+			
 			case "clearchat":
 			case "legendchat": {
 				AdminCommand cmd = new AdminCommand();
@@ -223,6 +223,9 @@ public class Commands implements CommandExecutor, TabCompleter {
 				}
 			}
 			return true;
+		} else if (cmd.getName().equalsIgnoreCase("me")) {
+
+			return true;
 		}
 		return false;
 	}
@@ -269,7 +272,6 @@ public class Commands implements CommandExecutor, TabCompleter {
 		}
 		sender.sendMessage(Legendchat.getMessageManager().getMessage("listcmd3").replace("@version", Legendchat.getPlugin().getDescription().getVersion()));
 	}
-
 	protected static void sendHelpTempChannel(CommandSender sender) {
 		sender.sendMessage(Legendchat.getMessageManager().getMessage("listtc1"));
 		String msg2 = Legendchat.getMessageManager().getMessage("listtc2");

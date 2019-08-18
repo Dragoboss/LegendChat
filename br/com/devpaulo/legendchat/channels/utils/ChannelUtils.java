@@ -22,6 +22,7 @@ import br.com.devpaulo.legendchat.channels.types.Channel;
 import br.com.devpaulo.legendchat.channels.types.TemporaryChannel;
 import br.com.devpaulo.legendchat.listeners.Listeners;
 import br.com.devpaulo.legendchat.listeners.Listeners_old;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 @SuppressWarnings("deprecation")
 public class ChannelUtils {
@@ -151,6 +152,14 @@ public class ChannelUtils {
 				gastou=true;
 			}
 		}
+                String playerColor = null;
+                if (!(Main.colorsPerPlayer.isEmpty())) {
+                        for (String key : Main.colorsPerPlayer.keySet()) {
+                                if (key.equals(sender.getUniqueId().toString())) {
+                                    playerColor = Main.colorsPerPlayer.get(key);
+                                }
+                        }
+                }
 		String n_format_p_p = "";
 		String n_format_p = "";
 		String n_format_s = "";
@@ -179,6 +188,7 @@ public class ChannelUtils {
 			}
 		}
 		HashMap<String,String> tags = new HashMap<>();
+                tags.put("playercolor", playerColor);
 		tags.put("name", c.getName());
 		tags.put("nick", c.getNickname());
 		tags.put("color", c.getColor());

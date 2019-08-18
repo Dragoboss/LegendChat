@@ -24,7 +24,10 @@ import br.com.devpaulo.legendchat.commands.Commands;
 import br.com.devpaulo.legendchat.listeners.Listeners;
 import br.com.devpaulo.legendchat.listeners.Listeners_old;
 import br.com.devpaulo.legendchat.updater.Updater;
+import com.earth2me.essentials.Essentials;
+import java.util.Map;
 import java.util.logging.Level;
+import org.bukkit.Bukkit;
 
 public class Main extends JavaPlugin implements PluginMessageListener {
 	public static Permission perms = null;
@@ -36,20 +39,25 @@ public class Main extends JavaPlugin implements PluginMessageListener {
 	public static boolean bungeeActive = false;
 	public static String language = "en";
 	public static String need_update = null;
+        public static Essentials ess = null;
+        public static Map<String, String> colorsPerPlayer = new HashMap<>();
 	
 	@Override
     public void onEnable() {
 		getLogger().log(Level.INFO, "Legendchat (V{0}) - Author: SubZero0", getDescription().getVersion());
 		Legendchat.load(false);
-		
+                
+                ess = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
+     
 		getServer().getPluginCommand("legendchat").setExecutor(new Commands());
 		getServer().getPluginCommand("channel").setExecutor(new Commands());
 		getServer().getPluginCommand("tell").setExecutor(new Commands());
 		getServer().getPluginCommand("reply").setExecutor(new Commands());
-		getServer().getPluginCommand("afk").setExecutor(new Commands());
 		getServer().getPluginCommand("ignore").setExecutor(new Commands());
 		getServer().getPluginCommand("tempchannel").setExecutor(new Commands());
-		getServer().getPluginCommand("mute").setExecutor(new Commands());
+		getServer().getPluginCommand("channelmute").setExecutor(new Commands());
+                getServer().getPluginCommand("spy").setExecutor(new Commands());
+                getServer().getPluginCommand("setcolor").setExecutor(new Commands());
 		
 		if(getConfig().getBoolean("use_async_chat_event",true))
 			getServer().getPluginManager().registerEvents(new Listeners(), this);
@@ -57,7 +65,7 @@ public class Main extends JavaPlugin implements PluginMessageListener {
 			getServer().getPluginManager().registerEvents(new Listeners_old(), this);
 		
 		getServer().getMessenger().registerOutgoingPluginChannel(this, "Legendchat");
-        getServer().getMessenger().registerIncomingPluginChannel(this, "Legendchat", this);
+                getServer().getMessenger().registerIncomingPluginChannel(this, "Legendchat", this);
 		
 		boolean check_update = true;
 		if(getConfig().contains("check_for_updates"))
@@ -120,6 +128,9 @@ public class Main extends JavaPlugin implements PluginMessageListener {
 		if(new Updater().updateChannels())
 			getLogger().info("Channels file updated!");
 		Legendchat.getChannelManager().loadChannels();
+                
+                if(new Updater().loadPlayerColors())
+                        getLogger().info("Loaded PlayerColors Configuration");
 		
 		language=getConfig().getString("language").trim();
 		if(new Updater().updateAndLoadLanguage(language))

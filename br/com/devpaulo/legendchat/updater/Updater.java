@@ -1,5 +1,6 @@
 package br.com.devpaulo.legendchat.updater;
 
+import br.com.devpaulo.legendchat.Main;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -80,7 +81,7 @@ public class Updater {
 	private Plugin plugin = Bukkit.getPluginManager().getPlugin("Legendchat");
 	public boolean updateConfig() {
 		InputStream is = plugin.getResource(("config_template.yml").replace('\\', '/'));
-		YamlConfiguration c = YamlConfiguration.loadConfiguration(is);
+		YamlConfiguration c = YamlConfiguration.loadConfiguration(new InputStreamReader(is));
 		for(String n : c.getConfigurationSection("").getKeys(true))
 			if(!has(n))
 				set(n,c.get(n));
@@ -107,7 +108,7 @@ public class Updater {
 		InputStream is = null;
 		if((is = plugin.getResource(("language"+File.separator+"language_"+language+".yml").replace('\\', '/')))==null)
 			is=plugin.getResource(("language"+File.separator+"language_en.yml").replace('\\', '/'));
-		YamlConfiguration c = YamlConfiguration.loadConfiguration(is);
+		YamlConfiguration c = YamlConfiguration.loadConfiguration(new InputStreamReader(is));
 		for(String n : c.getConfigurationSection("").getKeys(false))
 			if(!m.hasMessage(n))
 				addMessage(m,n,c.getString(n));
@@ -135,5 +136,32 @@ public class Updater {
 		}
 		return upd;
 	}
-	
+        
+        public boolean loadPlayerColors() {
+                boolean loaded = false;
+                File playerColors = new File(Bukkit.getPluginManager().getPlugin("LegendChat").getDataFolder(),"playerColors.yml");
+                if (playerColors.exists()) {
+                        YamlConfiguration playerColorsConf = YamlConfiguration.loadConfiguration(playerColors);
+                        for (String key : playerColorsConf.getConfigurationSection("Players").getKeys(false)) {
+                                Main.colorsPerPlayer.put(key, playerColorsConf.getString(key));
+                        }
+                        playerColors.delete();
+                        loaded = true;
+                }
+                Bukkit.getLogger().info("Loaded PlayerColorsConf");
+                return loaded;
+        }
+        public boolean savePlayerColors() {
+                boolean saved = false;
+                if (!(Main.colorsPerPlayer.isEmpty())){
+                        File playerColors = new File(Bukkit.getPluginManager().getPlugin("LegendChat").getDataFolder(),"playerColors.yml");
+                        YamlConfiguration playerColorsConf = new YamlConfiguration();
+                        playerColorsConf.createSection("Players");
+                        for (String key : Main.colorsPerPlayer.keySet()) {
+                                playerColorsConf.set("Players." + key, Main.colorsPerPlayer.get(key));
+                        }
+                }
+                Bukkit.getLogger().info("Saved PlayerColorsConf");
+                return saved;
+        }
 }

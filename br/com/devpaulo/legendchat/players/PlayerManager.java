@@ -28,9 +28,15 @@ public class PlayerManager {
 	public void setPlayerFocusedChannel(Player p, Channel c, boolean msg) {
 		if(Legendchat.getDefaultChannel()!=c&&c!=null)
 			if(!p.hasPermission("legendchat.channel."+c.getName()+".focus")&&!p.hasPermission("legendchat.admin")) {
-				if(msg)
-					p.sendMessage(Legendchat.getMessageManager().getMessage("error5"));
-				return;
+                            if (c instanceof TemporaryChannel) {
+                                if (!p.hasPermission("legendchat.tempchannel.user")) {
+                                    p.sendMessage(Legendchat.getMessageManager().getMessage("error5"));
+                                    return;
+                                }
+                            }
+                            if(msg)
+                                p.sendMessage(Legendchat.getMessageManager().getMessage("error5"));
+                            return;
 			}
 		if(isPlayerFocusedInAnyChannel(p))
 			players.remove(p);

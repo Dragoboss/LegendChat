@@ -1,7 +1,7 @@
 name: Legendchat
 author: SubZero0
 main: br.com.devpaulo.legendchat.Main
-version: 1.1.3
+version: 1.1.5_berrycraft-edit
 softdepend: [Vault]
 load: STARTUP
 website: www.devpaulo.com.br
@@ -17,14 +17,11 @@ commands:
    tell:
       description: Send a private message.
       usage: /<command> <player> <message>
-      aliases: [msg, pm, t, whisper, w]
+      aliases: [msg, pm, t, m, whisper, w]
    reply:
       description: Reply a private message.
       usage: /<command> <message>
       aliases: r
-   afk:
-      description: Activate/Deactivate afk.
-      usage: /<command> [motive]
    ignore:
       description: Ignore a player.
       usage: /<command> <player>
@@ -32,6 +29,28 @@ commands:
       description: Temporary channel main command.
       usage: /<command>
       aliases: tc
-   mute:
+   channelmute:
       description: Ignore a channel.
       usage: /<command> <channel>
+   spy:
+      description: Listen to all channels.
+      usage: /<command>
+   setcolor:
+      description: Set your chat message standard color.
+      usage: /<command> <color-code|clear>
+      
+##### So What is this berrycraft-edit? #####
+# I (dragoboss) edited a couple lines in this plugin version to better
+# suit the BerryCraft server. I made the following edits:
+#
+# 1. using the shortcut of a channel without any message behind it now focuses
+#    the channel instead of giving the message "/<channel> <message>"
+# 2. using /spy (formerly /lc spy) now also turns on Essentials social-spy so that all chat
+#    fuctions are spied on through both plugins instead of just half through either.
+# 3. Edited the /mute plugin so we can move either /lc mute to /mute or keep using
+#    the Essentials mute command.
+# 4. Removed /ignore because of the Essentials built in exempt
+# 5. Removed /afk because of the essentials built-in auto-status and auto-kick
+# 6. now with 1.1.4 updated to 1.12
+# 7. 1.1.5 add /setcolor command to set chat color.
+#####          That is about it.       #####

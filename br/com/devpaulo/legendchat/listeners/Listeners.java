@@ -25,7 +25,7 @@ public class Listeners implements Listener {
 		if(hasAnyPermission(e.getPlayer())) {
     		final Player p = e.getPlayer();
     		Bukkit.getServer().getScheduler().runTaskLater(Legendchat.getPlugin(), new Runnable() {
-                            @Override
+                        @Override
     			public void run() {
     				if(Main.need_update!=null) {
     					p.sendMessage(ChatColor.GOLD+"[Legendchat] "+ChatColor.WHITE+"New update avaible: "+ChatColor.AQUA+"V"+Main.need_update+"!");
@@ -101,7 +101,9 @@ public class Listeners implements Listener {
 		if(e.getMessage()!=null&&!chats.containsKey(e)&&!e.isCancelled()) {
 			Legendchat.getAfkManager().removeAfk(e.getPlayer());
 			if(Legendchat.getPrivateMessageManager().isPlayerTellLocked(e.getPlayer())) {
-				Legendchat.getPrivateMessageManager().tellPlayer(e.getPlayer(), null, e.getMessage());
+                            if(!(Legendchat.getMuteManager().isPlayerMuted(e.getPlayer().getName()))) {
+                                Legendchat.getPrivateMessageManager().tellPlayer(e.getPlayer(), null, e.getMessage());
+                            }
 			}
 			else {
 				if(Legendchat.getPlayerManager().isPlayerFocusedInAnyChannel(e.getPlayer()))
@@ -119,6 +121,9 @@ public class Listeners implements Listener {
 	
 	@EventHandler(ignoreCancelled = false, priority = EventPriority.MONITOR)
 	private void onChat(PlayerCommandPreprocessEvent e) {
+                if(Legendchat.getMuteManager().isPlayerMuted(e.getPlayer().getName())) {
+                    e.setCancelled(true);
+                }
 		boolean block = false;
 		if(Legendchat.blockShortcutsWhenCancelled())
 			if(e.isCancelled())
@@ -129,7 +134,7 @@ public class Listeners implements Listener {
 				if(c.isShortcutAllowed()) {
 					if(lowered_msg.startsWith("/"+c.getNickname().toLowerCase())) {
 						if(e.getMessage().length()==("/"+c.getNickname()).length()) {
-							e.getPlayer().sendMessage(Legendchat.getMessageManager().getMessage("wrongcmd").replace("@command", "/"+c.getNickname().toLowerCase()+" <"+Legendchat.getMessageManager().getMessage("message")+">"));
+							e.getPlayer().performCommand("channel " + c.getName());
 							e.setCancelled(true);
 						}
 						else if(lowered_msg.startsWith("/"+c.getNickname().toLowerCase()+" ")) {
@@ -147,8 +152,8 @@ public class Listeners implements Listener {
 					}
 					if(lowered_msg.startsWith("/"+c.getName().toLowerCase())) {
 						if(e.getMessage().length()==("/"+c.getName()).length()) {
-							e.getPlayer().sendMessage(Legendchat.getMessageManager().getMessage("wrongcmd").replace("@command", "/"+c.getName().toLowerCase()+" <"+Legendchat.getMessageManager().getMessage("message")+">"));
-							e.setCancelled(true);
+							e.getPlayer().performCommand("channel " + c.getName());
+                                                        e.setCancelled(true);                                                        
 						}
 						else if(lowered_msg.startsWith("/"+c.getName().toLowerCase()+" ")) {
 							String message = "";

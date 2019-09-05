@@ -16,13 +16,17 @@ import br.com.devpaulo.legendchat.channels.types.Channel;
 import br.com.devpaulo.legendchat.configurations.ConfigManager;
 import br.com.devpaulo.legendchat.delays.DelayManager;
 import br.com.devpaulo.legendchat.ignore.IgnoreManager;
+import br.com.devpaulo.legendchat.logs.ChannelHistory;
 import br.com.devpaulo.legendchat.logs.LogManager;
 import br.com.devpaulo.legendchat.messages.MessageManager;
 import br.com.devpaulo.legendchat.mutes.MuteManager;
 import br.com.devpaulo.legendchat.players.PlayerManager;
 import br.com.devpaulo.legendchat.privatemessages.PrivateMessageManager;
+import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 
 public class Legendchat {
+
 	private static boolean logToBukkit = false;
 	private static boolean blockRepeatedTags = false;
 	private static boolean showNoOneHearsYou = false;
@@ -32,17 +36,21 @@ public class Legendchat {
 	private static boolean isBungeecordActive = false;
 	private static boolean isCensorActive = false;
 	private static boolean logToFile = false;
+	private static boolean logLocations = false;
 	private static boolean useAsyncChat = false;
+	private static boolean useJoinChatHistory = false;
 	private static boolean maintainSpyMode = false;
 	private static int logToFileTime = 10;
+	private static int joinChatHistoryTime = 10;
+	private static int joinChatHistoryMax = 20;
 	private static Channel defaultChannel = null;
 	private static BungeecordChannel bungeecordChannel = null;
 	private static Plugin plugin = null;
-	private static final HashMap<String,String> formats = new HashMap<>();
-	private static final HashMap<String,String> pm_formats = new HashMap<>();
-	private static final HashMap<String,String> text_to_tag = new HashMap<>();
+	private static final HashMap<String, String> formats = new HashMap<>();
+	private static final HashMap<String, String> pm_formats = new HashMap<>();
+	private static final HashMap<String, String> text_to_tag = new HashMap<>();
 	private static String language = "en";
-	
+
 	private static ChannelManager cm = null;
 	private static PlayerManager pm = null;
 	private static MessageManager mm = null;
@@ -52,38 +60,39 @@ public class Legendchat {
 	private static MuteManager mum = null;
 	private static CensorManager cem = null;
 	private static LogManager lm = null;
+	private static ChannelHistory ch = null;
 	private static TemporaryChannelManager tcm = null;
 	private static ConfigManager com = null;
 	private static AfkManager afk = null;
-	
+
 	public static ChannelManager getChannelManager() {
 		return cm;
 	}
-	
+
 	public static PlayerManager getPlayerManager() {
 		return pm;
 	}
-	
+
 	public static MessageManager getMessageManager() {
 		return mm;
 	}
-	
+
 	public static IgnoreManager getIgnoreManager() {
 		return im;
 	}
-	
+
 	public static PrivateMessageManager getPrivateMessageManager() {
 		return pmm;
 	}
-	
+
 	public static DelayManager getDelayManager() {
 		return dm;
 	}
-	
+
 	public static MuteManager getMuteManager() {
 		return mum;
 	}
-	
+
 	public static CensorManager getCensorManager() {
 		return cem;
 	}
@@ -91,146 +100,202 @@ public class Legendchat {
 	public static LogManager getLogManager() {
 		return lm;
 	}
-	
+
+	public static ChannelHistory getChannelHistory() {
+		return ch;
+	}
+
 	public static TemporaryChannelManager getTemporaryChannelManager() {
 		return tcm;
 	}
-	
+
 	public static ConfigManager getConfigManager() {
 		return com;
 	}
-	
+
 	public static AfkManager getAfkManager() {
 		return afk;
 	}
-	
+
 	public static Channel getDefaultChannel() {
 		return defaultChannel;
 	}
-	
+
 	public static boolean logToBukkit() {
 		return logToBukkit;
 	}
-	
+
 	public static boolean blockRepeatedTags() {
 		return blockRepeatedTags;
 	}
-	
+
 	public static boolean showNoOneHearsYou() {
 		return showNoOneHearsYou;
 	}
-	
+
 	public static boolean forceRemoveDoubleSpacesFromBukkit() {
 		return forceRemoveDoubleSpacesFromBukkit;
 	}
-	
+
 	public static boolean sendFakeMessageToChat() {
 		return sendFakeMessageToChat;
 	}
-	
+
 	public static boolean blockShortcutsWhenCancelled() {
 		return blockShortcutsWhenCancelled;
 	}
-	
+
 	public static boolean isBungeecordActive() {
 		return isBungeecordActive;
 	}
-	
+
 	public static boolean isCensorActive() {
 		return isCensorActive;
 	}
-	
+
 	public static boolean logToFile() {
 		return logToFile;
 	}
-	
+
+	public static boolean logLocations() {
+		return logLocations;
+	}
+
+	public static boolean useJoinChatHistory() {
+		return useJoinChatHistory;
+	}
+
 	public static boolean useAsyncChat() {
 		return useAsyncChat;
 	}
-	
+
 	public static boolean maintainSpyMode() {
 		return maintainSpyMode;
 	}
-	
+
 	public static int getLogToFileTime() {
 		return logToFileTime;
 	}
-	
+
+	public static int getJoinChatHistoryTime() {
+		return joinChatHistoryTime;
+	}
+
+	public static int getJoinChatHistoryMax() {
+		return joinChatHistoryMax;
+	}
+
 	public static BungeecordChannel getBungeecordChannel() {
 		return bungeecordChannel;
 	}
-	
+
 	public static Plugin getPlugin() {
 		return plugin;
 	}
-	
+
 	public static String format(String msg) {
-		for(String f : formats.keySet())
-			msg = msg.replace("{"+f+"}", formats.get(f));
+		for (String f : formats.keySet()) {
+			msg = msg.replace("{" + f + "}", formats.get(f));
+		}
 		return msg;
 	}
-	
+
 	public static String getFormat(String base_format) {
 		return formats.get(base_format.toLowerCase());
 	}
-	
+
 	public static String getPrivateMessageFormat(String format) {
 		return pm_formats.get(format.toLowerCase());
 	}
-	
+
 	public static String getLanguage() {
 		return language;
 	}
-	
-	public static HashMap<String,String> textToTag() {
-		HashMap<String,String> h = new HashMap<>();
+
+	public static Channel joinPlayerToDefault(Player p) {
+		final Channel cDef = getDefaultChannel();
+		// if this player can't join global, put them in a channel that they can join
+		if (cDef == null || !p.hasPermission("legendchat.channel." + cDef.getName() + ".focus")) {
+			// try to put them in the first channel they can join
+			for (PermissionAttachmentInfo perms : p.getEffectivePermissions()) {
+				final String perm = perms.getPermission();
+				if (perm.startsWith("legendchat.channel.") && perm.endsWith(".focus")) {
+					// found one!
+					String chName = perm.substring("legendchat.channel.".length(), perm.length() - ".focus".length());
+					Channel ch = Legendchat.getChannelManager().getChannelByName(chName);
+					if (ch != null) {
+						Legendchat.getPlayerManager().setPlayerFocusedChannel(p, ch, false);
+						return ch;
+					}
+				}
+			}
+		}
+		// set this player's default channel to global
+		getPlayerManager().setPlayerFocusedChannel(p, cDef, false);
+		return cDef;
+	}
+
+	public static HashMap<String, String> textToTag() {
+		HashMap<String, String> h = new HashMap<>();
 		h.putAll(text_to_tag);
 		return h;
 	}
-	
+
 	public static void load(boolean all) {
-		plugin=Bukkit.getPluginManager().getPlugin("Legendchat");
-		if(!all) {
-			cm=new ChannelManager();
-			pm=new PlayerManager();
-			mm=new MessageManager();
-			im=new IgnoreManager();
-			pmm=new PrivateMessageManager();
-			dm=new DelayManager();
-			mum=new MuteManager();
-			cem=new CensorManager();
-			lm=new LogManager();
-			tcm=new TemporaryChannelManager();
-			com=new ConfigManager();
-			afk=new AfkManager();
+		plugin = Bukkit.getPluginManager().getPlugin("Legendchat");
+		if (!all) {
+			cm = new ChannelManager();
+			pm = new PlayerManager();
+			mm = new MessageManager();
+			im = new IgnoreManager();
+			pmm = new PrivateMessageManager();
+			dm = new DelayManager();
+			mum = new MuteManager();
+			cem = new CensorManager();
+			if (lm == null) {
+				lm = new LogManager();
+			}
+			if (ch == null) {
+				ch = new ChannelHistory();
+			}
+			tcm = new TemporaryChannelManager();
+			com = new ConfigManager();
+			afk = new AfkManager();
 			return;
 		}
 		FileConfiguration fc = Bukkit.getPluginManager().getPlugin("Legendchat").getConfig();
-		defaultChannel=Legendchat.getChannelManager().getChannelByName(fc.getString("default_channel","local").toLowerCase());
-		logToBukkit=fc.getBoolean("log_to_bukkit",false);
-		blockRepeatedTags=fc.getBoolean("block_repeated_tags",true);
-		showNoOneHearsYou=fc.getBoolean("show_no_one_hears_you",true);
-		forceRemoveDoubleSpacesFromBukkit=fc.getBoolean("force_remove_double_spaces_from_bukkit",true);
-		useAsyncChat=fc.getBoolean("use_async_chat_event",true);
-		sendFakeMessageToChat=fc.getBoolean("send_fake_message_to_chat",true);
-		blockShortcutsWhenCancelled=fc.getBoolean("block_shortcuts_when_cancelled",true);
-		maintainSpyMode=fc.getBoolean("maintain_spy_mode",false);
-		isBungeecordActive=Main.bungeeActive;
-		bungeecordChannel=(BungeecordChannel) getChannelManager().getChannelByName(fc.getString("bungeecord.channel","bungeecord"));
-		isCensorActive=fc.getBoolean("censor.use",true);
+		defaultChannel = Legendchat.getChannelManager().getChannelByName(fc.getString("default_channel", "local").toLowerCase());
+		logToBukkit = fc.getBoolean("log_to_bukkit", false);
+		blockRepeatedTags = fc.getBoolean("block_repeated_tags", true);
+		showNoOneHearsYou = fc.getBoolean("show_no_one_hears_you", true);
+		forceRemoveDoubleSpacesFromBukkit = fc.getBoolean("force_remove_double_spaces_from_bukkit", true);
+		useAsyncChat = fc.getBoolean("use_async_chat_event", true);
+		sendFakeMessageToChat = fc.getBoolean("send_fake_message_to_chat", true);
+		blockShortcutsWhenCancelled = fc.getBoolean("block_shortcuts_when_cancelled", true);
+		maintainSpyMode = fc.getBoolean("maintain_spy_mode", false);
+		isBungeecordActive = Main.bungeeActive;
+		bungeecordChannel = (BungeecordChannel) getChannelManager().getChannelByName(fc.getString("bungeecord.channel", "bungeecord"));
+		isCensorActive = fc.getBoolean("censor.use", true);
 		Legendchat.getCensorManager().loadCensoredWords(fc.getStringList("censor.censored_words"));
-		logToFile=fc.getBoolean("log_to_file.use",false);
-		logToFileTime=fc.getInt("log_to_file.time",10);
-		if(logToFile)
+		logToFile = fc.getBoolean("log_to_file.use", false);
+		logToFileTime = fc.getInt("log_to_file.time", 10);
+		logLocations = fc.getBoolean("log_to_file.save_locations", false);
+		if (logToFile) {
 			lm.startSavingScheduler();
-		language=Main.language;
+		}
+		useJoinChatHistory = fc.getBoolean("rejoin_chatlog.use", false);
+		joinChatHistoryTime = fc.getInt("rejoin_chatlog.time", 10);
+		joinChatHistoryMax = fc.getInt("rejoin_chatlog.max", 20);
+		language = Main.language;
 		formats.clear();
 		pm_formats.clear();
-		for(String f : fc.getConfigurationSection("format").getKeys(false))
-			formats.put(f.toLowerCase(), fc.getString("format."+f));
-		for(String f : fc.getConfigurationSection("private_message_format").getKeys(false))
-			pm_formats.put(f.toLowerCase(), fc.getString("private_message_format."+f));
-		for(String f : fc.getStringList("text_to_tag")) {
+		for (String f : fc.getConfigurationSection("format").getKeys(false)) {
+			formats.put(f.toLowerCase(), fc.getString("format." + f));
+		}
+		for (String f : fc.getConfigurationSection("private_message_format").getKeys(false)) {
+			pm_formats.put(f.toLowerCase(), fc.getString("private_message_format." + f));
+		}
+		for (String f : fc.getStringList("text_to_tag")) {
 			String[] s = f.split(";");
 			text_to_tag.put(s[0].toLowerCase(), s[1]);
 		}

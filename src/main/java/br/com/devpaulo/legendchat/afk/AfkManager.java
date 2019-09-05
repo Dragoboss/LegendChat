@@ -5,18 +5,21 @@ import java.util.HashMap;
 import org.bukkit.entity.Player;
 
 public class AfkManager {
-	private final HashMap<Player,String> afk = new HashMap<>();
 	
+	private final HashMap<Player, String> afk = new HashMap<>();
+
 	public void setAfk(Player p, String motivo) {
 		removeAfk(p);
-		if(motivo.equals(" ")||motivo.length()==0)
-			motivo=null;
+		if (motivo.equals(" ") || motivo.length() == 0) {
+			motivo = null;
+		}
 		afk.put(p, motivo);
 	}
 	
 	public void removeAfk(Player p) {
-		if(isAfk(p))
+		if (isAfk(p)) {
 			afk.remove(p);
+	}
 	}
 	
 	public boolean isAfk(Player p) {
@@ -24,8 +27,9 @@ public class AfkManager {
 	}
 	
 	public String getPlayerAfkMotive(Player p) {
-		if(isAfk(p))
+		if (isAfk(p)) {
 			return afk.get(p);
+		}
 		return null;
 	}
 

@@ -48,9 +48,17 @@ public class Main extends JavaPlugin implements PluginMessageListener {
 	public void onEnable() {
 		getLogger().log(Level.INFO, "Legendchat (V{0}) - Author: SubZero0", getDescription().getVersion());
 		Legendchat.load(false);
-				
-			ess = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
-	 
+		
+		Commands c = new Commands();
+		PluginCommand pc;
+		for (String cmd : this.getDescription().getCommands().keySet()) {
+			if ((pc = getServer().getPluginCommand(cmd)) != null) {
+				c.registerCommand(pc);
+			} else {
+				getLogger().warning("Failed to register command: " + cmd);
+			}
+		}
+	
 		if (getConfig().getBoolean("use_async_chat_event", true)) {
 			getServer().getPluginManager().registerEvents(new Listeners(), this);
 		} else {
@@ -110,34 +118,14 @@ public class Main extends JavaPlugin implements PluginMessageListener {
 			}
 		}
 		
-		try {
-			if (!new File(getDataFolder(), "language" + File.separator + "language_br.yml").exists()) {
-				saveResource("language" + File.separator + "language_br.yml", false);
-				getLogger().info("Saved language_br.yml");
-			}
-		} catch (Exception e) {
-		}
-		try {
-			if (!new File(getDataFolder(), "language" + File.separator + "language_en.yml").exists()) {
-				saveResource("language" + File.separator + "language_en.yml", false);
-				getLogger().info("Saved language_en.yml");
-			}
-		} catch (Exception e) {
-		}
-		try {
-			if (!new File(getDataFolder(), "language" + File.separator + "language_cn.yml").exists()) {
-				saveResource("language" + File.separator + "language_cn.yml", false);
-				getLogger().info("Saved language_cn.yml");
-			}
-		} catch (Exception e) {
-		}
-		try {
-			if (!new File(getDataFolder(), "temporary_channels.yml").exists()) {
-				saveResource("temporary_channels.yml", false);
-				getLogger().info("Saved temporary_channels.yml");
-			}
-		} catch (Exception e) {
-		}
+		try {if(!new File(getDataFolder(),"language"+File.separator+"language_br.yml").exists()) {saveResource("language"+File.separator+"language_br.yml",false);getLogger().info("Saved language_br.yml");}}
+		catch(Exception e) {}
+		try {if(!new File(getDataFolder(),"language"+File.separator+"language_en.yml").exists()) {saveResource("language"+File.separator+"language_en.yml",false);getLogger().info("Saved language_en.yml");}}
+		catch(Exception e) {}
+		try {if(!new File(getDataFolder(),"language"+File.separator+"language_cn.yml").exists()) {saveResource("language"+File.separator+"language_cn.yml",false);getLogger().info("Saved language_cn.yml");}}
+		catch(Exception e) {}
+		try {if(!new File(getDataFolder(),"temporary_channels.yml").exists()) {saveResource("temporary_channels.yml",false);getLogger().info("Saved temporary_channels.yml");}}
+		catch(Exception e) {}
 		
 		File channels = new File(getDataFolder(), "channels");
 		if (!channels.exists()) {
@@ -152,6 +140,9 @@ public class Main extends JavaPlugin implements PluginMessageListener {
 		}
 		Legendchat.getChannelManager().loadChannels();
 				
+		if(new Updater().loadPlayerColors())
+			getLogger().info("Loaded PlayerColors Configuration");
+		
 		language = getConfig().getString("language").trim();
 		if (new Updater().updateAndLoadLanguage(language)) {
 			getLogger().info("Language file updated!");
@@ -195,7 +186,7 @@ public class Main extends JavaPlugin implements PluginMessageListener {
 		if (getServer().getPluginManager().getPlugin("Vault") == null) {
 			return false;
 		}
-		 RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+		RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
 		if (rsp == null) {
 			return false;
 		}
@@ -207,12 +198,12 @@ public class Main extends JavaPlugin implements PluginMessageListener {
 		if (getServer().getPluginManager().getPlugin("Vault") == null) {
 			return false;
 		}
-		 RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
+		RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
 		if (rsp == null) {
 			return false;
 		}
 		 chat = rsp.getProvider();
-		 return chat != null;
+		return chat != null;
 	}
 	
 	private boolean setupEconomy() {
@@ -258,7 +249,7 @@ public class Main extends JavaPlugin implements PluginMessageListener {
 			BungeecordChannel c = Legendchat.getBungeecordChannel();
 			if (c != null) {
 				c.sendBungeecordMessage(tags, msg);
+			}
 		}
 	}
-}
 }

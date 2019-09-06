@@ -1,5 +1,6 @@
 package br.com.devpaulo.legendchat.channels.types;
 
+import br.com.devpaulo.legendchat.Main;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;

@@ -2,7 +2,8 @@ name: Legendchat
 author: SubZero0
 main: br.com.devpaulo.legendchat.Main
 version: 1.1.5_berrycraft-edit
-softdepend: [Vault]
+api-version: 1.14
+softdepend: [Vault, PlaceholderAPI]
 load: STARTUP
 website: www.devpaulo.com.br
 commands:
@@ -22,6 +23,9 @@ commands:
       description: Reply a private message.
       usage: /<command> <message>
       aliases: r
+   afk:
+      description: Activate/Deactivate afk.
+      usage: /<command> [motive]
    ignore:
       description: Ignore a player.
       usage: /<command> <player>
@@ -32,13 +36,22 @@ commands:
    channelmute:
       description: Ignore a channel.
       usage: /<command> <channel>
+      aliases: leave
    spy:
       description: Listen to all channels.
       usage: /<command>
    setcolor:
       description: Set your chat message standard color.
-      usage: /<command> <color-code|clear>
-      
+      usage: /<command> <color-code/clear>
+   me:
+      description: Sends a status message to your channel
+      usage: /<command> <message>
+   clearchat:
+      description: Clear visible chat
+      usage: /<command>
+      aliases: cc
+      permission: legendchat.admin.clearchat
+
 ##### So What is this berrycraft-edit? #####
 # I (dragoboss) edited a couple lines in this plugin version to better
 # suit the BerryCraft server. I made the following edits:

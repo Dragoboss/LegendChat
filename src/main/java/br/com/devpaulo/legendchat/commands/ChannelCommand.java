@@ -43,13 +43,13 @@ public class ChannelCommand implements CommandExecutor, TabCompleter {
 					}
 				}
 			}
-			if (cmd.getName().equalsIgnoreCase("mute")) {
+			if (cmd.getName().equalsIgnoreCase("channelmute")) {
 				sender.sendMessage(Legendchat.getMessageManager().getMessage("message20").replace("@channels", (mlist.length() == 0 ? "..." : mlist)));
 			} else {
 				sender.sendMessage(Legendchat.getMessageManager().getMessage("message22").replace("@channel", Legendchat.getPlayerManager().getPlayerFocusedChannel((Player) sender).getName()));
 				sender.sendMessage(Legendchat.getMessageManager().getMessage("message21").replace("@channels", (mlist.length() == 0 ? Legendchat.getMessageManager().getMessage("nothing") : mlist)));
 			}
-		} else if (cmd.getName().equalsIgnoreCase("mute")) { // Mute channel
+		} else if (cmd.getName().equalsIgnoreCase("channelmute")) { // Mute channel
 			Channel c = Legendchat.getChannelManager().getChannelByNameOrNickname(args[0]);
 			if (c == null) {
 				sender.sendMessage(Legendchat.getMessageManager().getMessage("error4"));

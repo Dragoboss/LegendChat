@@ -153,34 +153,13 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
 				Channel c;
 				ChannelManager cm = Legendchat.getChannelManager();
 				c = cm.getChannelByName(args[2]);
-				if (c == null) {
-					c = cm.getChannelByNickname(args[2]);
-				}
-				if (c == null) {
+				if (c == null && cm.getChannelByNickname(args[2]) == null) {
 					sender.sendMessage(Legendchat.getMessageManager().getMessage("error4"));
 					return true;
 				}
 				Legendchat.getPlayerManager().setPlayerFocusedChannel(p, c, false);
 				sender.sendMessage(Legendchat.getMessageManager().getMessage("message16").replace("@player", p.getName()).replace("@channel", c.getName()));
 				p.sendMessage(Legendchat.getMessageManager().getMessage("message17").replace("@player", sender.getName()).replace("@channel", c.getName()));
-				return true;
-			} else if (args[0].equalsIgnoreCase("spy")) {
-				if (!sender.hasPermission("legendchat.admin.spy") && !sender.hasPermission("legendchat.admin")) {
-					sender.sendMessage(Legendchat.getMessageManager().getMessage("error6"));
-					return true;
-				}
-				if (sender == Bukkit.getConsoleSender()) {
-					return false;
-				}
-				Player player = (Player) sender;
-				boolean spy = Legendchat.getPlayerManager().isSpy(player);
-				if (!spy) {
-					Legendchat.getPlayerManager().addSpy(player);
-					sender.sendMessage(Legendchat.getMessageManager().getMessage("message5"));
-				} else {
-					Legendchat.getPlayerManager().removeSpy(player);
-					sender.sendMessage(Legendchat.getMessageManager().getMessage("message6"));
-				}
 				return true;
 			} else if (args[0].equalsIgnoreCase("hide")) {
 				if (!sender.hasPermission("legendchat.admin.hide") && !sender.hasPermission("legendchat.admin")) {

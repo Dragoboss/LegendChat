@@ -1,5 +1,6 @@
 package br.com.devpaulo.legendchat.channels.types;
 
+import br.com.devpaulo.legendchat.Main;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public final class TemporaryChannel implements Channel {
 	private String formatMe = "";
 	private String color = "";
 	private String color2 = "";
+	private String perPlayerColor = "";
 	private boolean shortcut = false;
 	private boolean focus = false;
 	private double distance = 0;
@@ -249,35 +251,88 @@ public final class TemporaryChannel implements Channel {
 			leader_set(m);
 		}
 	}
-
+	
 	private Player getModToLeader() {
-		if (mods.isEmpty()) {
+		if(mods.isEmpty())
 			return null;
-		}
-		for (Player p : mods) {
-			int max_admin = Legendchat.getConfigManager().getTemporaryChannelConfig().getMaxAdminPerPlayer();
-			if (max_admin == 0) {
-				return p;
-			} else if (Legendchat.getTemporaryChannelManager().getPlayerTempChannelsAdmin(p).size() < max_admin) {
-				return p;
-			}
-		}
+            for (Player p : mods) {
+                int max_admin = Legendchat.getConfigManager().getTemporaryChannelConfig().getMaxAdminPerPlayer();
+                if(max_admin==0)
+                    return p;
+                else if(Legendchat.getTemporaryChannelManager().getPlayerTempChannelsAdmin(p).size()<max_admin)
+                    return p;
+            }
 		return null;
 	}
-
-	@Override
+	
+        @Override
 	public void sendMessage(final String message) {
 		ChannelUtils.otherMessage(this, message);
 	}
-
-	@Override
+	
+        @Override
 	public void sendMessage(final Player sender, final String message) {
 		ChannelUtils.fakeMessage(this, sender, message);
 	}
-
-	@Override
+	
+        @Override
 	public void sendMessage(Player sender, String message, String bukkit_format, boolean cancelled) {
 		ChannelUtils.realMessage(this, sender, message, bukkit_format, cancelled);
+	}
+	
+        @Override
+	public void setNickname(String n) {
+		nick=n;
+	}
+	
+        @Override
+	public void setFormat(String n) {
+		format=n;
+	}
+	
+        @Override
+	public void setColor(ChatColor c) {
+		color2=ChannelUtils.translateChatColorToStringColor(c);
+		color=ChannelUtils.translateStringColor(color2);
+	}
+	
+        @Override
+	public void setShortcutAllowed(boolean n) {
+		shortcut=n;
+	}
+	
+        @Override
+	public void setFocusNeeded(boolean n) {
+		focus=n;
+	}
+	
+        @Override
+	public void setCrossworlds(boolean n) {
+		crossworlds=n;
+	}
+	
+        @Override
+	public void setMaxDistance(double n) {
+		distance=n;
+	}
+	
+        @Override
+	public void setMessageCost(double n) {
+		cost=n;
+	}
+        @Override
+	public void setCostPerMessage(double n) {
+		cost=n;
+	}
+	
+        @Override
+	public void setShowCostMessage(boolean n) {
+		show_cost_msg=n;
+	}
+	
+        @Override
+	public void setDelayPerMessage(int n) {
+		delay=n;
 	}
 
 	@Override
@@ -291,63 +346,7 @@ public final class TemporaryChannel implements Channel {
 	}
 
 	@Override
-	public void setNickname(String n) {
-		nick = n;
-	}
-
-	@Override
-	public void setFormat(String n) {
-		format = n;
-	}
-
-	@Override
 	public void setMeFormat(String n) {
 		formatMe = n;
-	}
-
-	@Override
-	public void setColor(ChatColor c) {
-		color2 = ChannelUtils.translateChatColorToStringColor(c);
-		color = ChannelUtils.translateStringColor(color2);
-	}
-
-	@Override
-	public void setShortcutAllowed(boolean n) {
-		shortcut = n;
-	}
-
-	@Override
-	public void setFocusNeeded(boolean n) {
-		focus = n;
-	}
-
-	@Override
-	public void setCrossworlds(boolean n) {
-		crossworlds = n;
-	}
-
-	@Override
-	public void setMaxDistance(double n) {
-		distance = n;
-	}
-
-	@Override
-	public void setMessageCost(double n) {
-		cost = n;
-	}
-
-	@Override
-	public void setCostPerMessage(double n) {
-		cost = n;
-	}
-
-	@Override
-	public void setShowCostMessage(boolean n) {
-		show_cost_msg = n;
-	}
-
-	@Override
-	public void setDelayPerMessage(int n) {
-		delay = n;
 	}
 }

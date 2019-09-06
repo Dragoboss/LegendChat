@@ -8,17 +8,20 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class MessageManager {
-	private final HashMap<String,String> msgs = new  HashMap<>();
+
+	private final HashMap<String, String> msgs = new HashMap<>();
 	private File file = null;
+
 	public MessageManager() {
 	}
 	
 	public void loadMessages(File f) {
-		file=f;
+		file = f;
 		msgs.clear();
 		YamlConfiguration msglist = YamlConfiguration.loadConfiguration(f);
-		for(String n : msglist.getConfigurationSection("").getKeys(false))
+		for (String n : msglist.getConfigurationSection("").getKeys(false)) {
 			msgs.put(n.toLowerCase(), msglist.getString(n));
+		}
 	}
 	
 	public String getMessage(String msg) {
@@ -30,7 +33,8 @@ public class MessageManager {
 		msglist.set(name, msg);
 		try {
 			msglist.save(file);
-		} catch (IOException e) {}
+		} catch (IOException e) {
+	}
 	}
 	
 	public boolean hasMessage(String name) {
@@ -38,7 +42,7 @@ public class MessageManager {
 	}
 	
 	public void registerLanguageFile(File f) {
-		file=f;
+		file = f;
 	}
 	
 }

@@ -3,17 +3,18 @@ package br.com.devpaulo.legendchat.mutes;
 import java.util.HashMap;
 
 public class MuteManager {
-	private final HashMap<String,Mute> mutes = new HashMap<>();
+
+	private final HashMap<String, Mute> mutes = new HashMap<>();
 	private boolean muteall = false;
+
 	public MuteManager() {
 	}
 	
 	public void mutePlayer(String name, int time) {
 		name = name.toLowerCase();
-		if(isPlayerMuted(name)) {
+		if (isPlayerMuted(name)) {
 			getPlayerMute(name).mute(time);
-		}
-		else {
+		} else {
 			Mute m = new Mute(name);
 			mutes.put(name, m);
 			m.mute(time);
@@ -22,30 +23,34 @@ public class MuteManager {
 	
 	public Mute getPlayerMute(String name) {
 		name = name.toLowerCase();
-		if(isPlayerMuted(name))
+		if (isPlayerMuted(name)) {
 			return mutes.get(name);
+		}
 		return null;
 	}
 	
 	public int getPlayerMuteTimeLeft(String name) {
 		name = name.toLowerCase();
-		if(isPlayerMuted(name))
+		if (isPlayerMuted(name)) {
 			return mutes.get(name).getTimeLeft();
+		}
 		return 0;
 	}
 	
 	public void unmutePlayer(String name) {
 		name = name.toLowerCase();
-		if(!isPlayerMuted(name))
+		if (!isPlayerMuted(name)) {
 			return;
+		}
 		getPlayerMute(name).unmute();
 		mutes.remove(name);
 	}
 	
 	public void removePlayerMute(String name) {
 		name = name.toLowerCase();
-		if(!isPlayerMuted(name))
+		if (!isPlayerMuted(name)) {
 			return;
+		}
 		mutes.remove(name);
 	}
 	
@@ -58,11 +63,11 @@ public class MuteManager {
 	}
 	
 	public void muteServer() {
-		muteall=true;
+		muteall = true;
 	}
 	
 	public void unmuteServer() {
-		muteall=false;
+		muteall = false;
 	}
 
 }

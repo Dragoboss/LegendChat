@@ -61,13 +61,12 @@ public class ChannelUtils {
 			PlayerChatEvent event = new PlayerChatEvent(sender, message);
 			Listeners_old.addFakeChat(event, false);
 			Bukkit.getPluginManager().callEvent(event);
-			if(!Listeners_old.getFakeChat(event))
-				c.sendMessage(sender, message, event.getFormat(), Listeners_old.getFakeChat(event));
+			c.sendMessage(sender, message, event.getFormat(), Listeners_old.getFakeChat(event));
 			Listeners_old.removeFakeChat(event);
 		} else {
 			HashSet<Player> p = new HashSet<>();
 			p.add(sender);
-			final AsyncPlayerChatEvent event = new AsyncPlayerChatEvent(true, sender, message, p);
+			final AsyncPlayerChatEvent event = new AsyncPlayerChatEvent(true, sender, "legendchat", p);
 			Listeners.addFakeChat(event, false);
 			Bukkit.getScheduler().runTaskAsynchronously(Legendchat.getPlugin(), () -> {
 				Bukkit.getPluginManager().callEvent(event);
